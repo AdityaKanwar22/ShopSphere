@@ -35,6 +35,11 @@ Whether you are a beginner looking to understand the basics or an advanced devel
    - **Deployment Guide**: Render, Vercel, Heroku.
    - **Interview Preparation**: How to explain this project confidently.
 
+### 6. [Security Audit & Enhancements](./docs/06_SECURITY_AUDIT.md)
+   - **Comprehensive Security Analysis**.
+   - Basic, Intermediate, and Advanced suggestions.
+   - Covering JWT, CORS, Input Validation, and Database Hardening.
+
 ---
 
 ## 🛠 Quick Start
