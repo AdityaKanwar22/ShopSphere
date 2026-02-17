@@ -40,6 +40,12 @@ Whether you are a beginner looking to understand the basics or an advanced devel
    - Basic, Intermediate, and Advanced suggestions.
    - Covering JWT, CORS, Input Validation, and Database Hardening.
 
+### 7. [Security Implementation Guide](./docs/07_SECURITY_IMPLEMENTATION_GUIDE.md)
+   - **Actionable Code Snippets**.
+   - Exact implementation steps for:
+     - Input Validation & Sanitization (prevent XSS, NoSQL Injection).
+     - Secure CORS Configuration (whitelist domains, allow credentials).
+
 ---
 
 ## 🛠 Quick Start
