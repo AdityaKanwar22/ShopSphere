@@ -46,6 +46,12 @@ Whether you are a beginner looking to understand the basics or an advanced devel
      - Input Validation & Sanitization (prevent XSS, NoSQL Injection).
      - Secure CORS Configuration (whitelist domains, allow credentials).
 
+### 8. [Secure Environment Variables](./docs/08_ENV_SECURITY_GUIDE.md)
+   - **Actionable Implementation Steps**.
+   - Secure `.env` configuration (backend & frontend).
+   - How to validate variables on startup (crash-fast).
+   - Production best practices to prevent leaks.
+
 ---
 
 ## 🛠 Quick Start
