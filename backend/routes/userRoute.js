@@ -5,9 +5,20 @@ import {
     registerUser,
 } from "../controllers/userController.js";
 
+import {
+    registerValidation,
+    loginValidation,
+} from "../middlewares/validation.js";
+
 const userRouter = express.Router();
-userRouter.post("/register", registerUser);
-userRouter.post("/login", loginUser);
+
+// Register Route with Validation
+userRouter.post("/register", registerValidation, registerUser);
+
+// Login Route with Validation
+userRouter.post("/login", loginValidation, loginUser);
+
+// Admin Login (optional: you can also add validation here later)
 userRouter.post("/admin", adminLogin);
 
 export default userRouter;
