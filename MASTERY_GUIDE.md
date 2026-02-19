@@ -52,6 +52,12 @@ Whether you are a beginner looking to understand the basics or an advanced devel
    - How to validate variables on startup (crash-fast).
    - Production best practices to prevent leaks.
 
+### 9. [Intermediate Security (Helmet, Rate Limit)](./docs/09_INTERMEDIATE_SECURITY_GUIDE.md)
+   - **Actionable Implementation Steps**.
+   - Rate Limiting (Global & Login Protection) using `express-rate-limit`.
+   - HTTP Headers Security using `helmet`.
+   - Secure Error Handling Middleware (Hide stack traces).
+
 ---
 
 ## 🛠 Quick Start
