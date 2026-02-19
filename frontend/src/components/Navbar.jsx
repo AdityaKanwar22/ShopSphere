@@ -18,7 +18,7 @@ const Navbar = () => {
         localStorage.removeItem("token");
         setToken("");
         setCartItems({});
-        // navigate("/login");
+        navigate("/login");
     };
 
     return (
