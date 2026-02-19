@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import "dotenv/config";
+
+import env from "./config/env.js"; // ✅ Validated environment variables
 
 import connectDB from "./config/mongodb.js";
 import connectCloudinary from "./config/cloudinary.js";
@@ -13,11 +14,19 @@ import orderRouter from "./routes/orderRoute.js";
 import { sanitizeData } from "./middlewares/validation.js";
 
 const app = express();
-const port = process.env.PORT || 4000;
+const port = env.PORT; // ✅ Use validated PORT
+
+// ==============================
+// 🔌 CONNECT DATABASE & CLOUDINARY
+// ==============================
 
 connectDB();
 connectCloudinary();
 
+
+// ==============================
+// 🔒 SECURE CORS CONFIGURATION
+// ==============================
 
 const allowedOrigins = [
     "http://localhost:5173", // Frontend Local
@@ -45,9 +54,17 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
+// ==============================
+// 🛡 GLOBAL SECURITY MIDDLEWARE
+// ==============================
+
 app.use(express.json());   // Parse JSON body
 app.use(sanitizeData);     // Prevent NoSQL injection
 
+
+// ==============================
+// 🚀 API ROUTES
+// ==============================
 
 app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
@@ -58,6 +75,10 @@ app.get("/", (req, res) => {
     res.send("API Working");
 });
 
+
+// ==============================
+// 🟢 START SERVER
+// ==============================
 
 app.listen(port, () => {
     console.log(`Server is running on PORT: ${port}`);

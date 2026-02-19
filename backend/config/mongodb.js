@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import env from "./env.js"; 
 
 const connectDB = async () => {
     try {
@@ -6,10 +7,12 @@ const connectDB = async () => {
             console.log("DB Connected");
         });
 
-        await mongoose.connect(process.env.MONGODB_URI);
+        // ✅ Use validated URI
+        await mongoose.connect(env.MONGODB_URI);
 
     } catch (error) {
         console.log("MongoDB Connection Error:", error.message);
+        process.exit(1); 
     }
 };
 
