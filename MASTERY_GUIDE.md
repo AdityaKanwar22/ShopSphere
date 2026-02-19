@@ -58,6 +58,13 @@ Whether you are a beginner looking to understand the basics or an advanced devel
    - HTTP Headers Security using `helmet`.
    - Secure Error Handling Middleware (Hide stack traces).
 
+### 10. [Advanced Security (JWT HttpOnly Cookies, DB Hardening)](./docs/10_ADVANCED_SECURITY_GUIDE.md)
+   - **Actionable Implementation Steps**.
+   - Switch from `localStorage` to `HttpOnly Cookies` for JWT.
+   - Implement CSRF protection (`csurf`).
+   - Hardening MongoDB (Schema Validation, Field Selection).
+   - Production Logging & Monitoring (`morgan`, `winston`).
+
 ---
 
 ## 🛠 Quick Start
