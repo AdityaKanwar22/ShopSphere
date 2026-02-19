@@ -65,6 +65,12 @@ Whether you are a beginner looking to understand the basics or an advanced devel
    - Hardening MongoDB (Schema Validation, Field Selection).
    - Production Logging & Monitoring (`morgan`, `winston`).
 
+### 11. [Troubleshooting Guide (Fix Missing Products & Login)](./docs/11_TROUBLESHOOTING_GUIDE.md)
+   - **Root Cause Analysis**.
+   - Why products show in Admin but not Frontend.
+   - Why user login fails (password hashing vs plain text).
+   - CORS, API URL, and Token storage checks.
+
 ---
 
 ## 🛠 Quick Start
