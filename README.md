@@ -1,8 +1,8 @@
 # 🛒✨ ShopSphere  
-### 🚀 A Modern Full-Stack E-Commerce Platform
+### 🚀 Secure Full-Stack E-Commerce Platform (MERN)
 
 <p align="center">
-  <b>Built with the MERN Stack | Secure | Scalable | Production-Ready</b>
+  <b>Modern • Secure • Scalable • Production-Ready</b>
 </p>
 
 ---
@@ -11,53 +11,113 @@
   <img src="https://img.shields.io/badge/Frontend-React-blue?style=for-the-badge&logo=react" />
   <img src="https://img.shields.io/badge/Backend-Node.js-green?style=for-the-badge&logo=node.js" />
   <img src="https://img.shields.io/badge/Database-MongoDB-darkgreen?style=for-the-badge&logo=mongodb" />
-  <img src="https://img.shields.io/badge/Styling-TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css" />
-  <img src="https://img.shields.io/badge/Payments-Stripe-purple?style=for-the-badge&logo=stripe" />
+  <img src="https://img.shields.io/badge/Security-Production--Ready-red?style=for-the-badge" />
 </p>
 
 ---
 
 ## 🌟 About The Project
 
-**ShopSphere** is a full-stack e-commerce web application designed to provide a seamless online shopping experience.
+**ShopSphere** is a secure full-stack e-commerce application built using the MERN stack.  
+It provides a complete online shopping experience along with an admin dashboard for product and order management.
 
-It includes:
-
-✔️ Secure Authentication  
-✔️ Product Management  
-✔️ Cart System  
-✔️ Order Processing  
-✔️ Online Payments  
-✔️ Admin Dashboard  
+The project emphasizes **security, scalability, and clean architecture**, making it production-ready.
 
 ---
 
 # 🧱 Tech Stack
 
-## 🎨 Frontend (User)
+## 🎨 Frontend
 - ⚛️ React (Vite)
 - 🔀 React Router DOM
 - 🎨 Tailwind CSS
 - 📡 Axios
 - 🔔 React Toastify
 
----
-
 ## 🛠 Admin Panel
 - ⚛️ React (Vite)
 - 🎨 Tailwind CSS
 - 📡 Axios
-
----
 
 ## ⚙️ Backend
 - 🟢 Node.js
 - 🚂 Express.js
 - 🍃 MongoDB (Mongoose)
 - 🔐 JWT Authentication
-- 📂 Multer (File Upload)
 - ☁️ Cloudinary (Image Hosting)
 - 💳 Stripe (Payment Integration)
+
+---
+
+# ✨ Features
+
+## 👤 User Features
+
+🔐 Secure User Authentication (JWT)  
+🛍 Browse & Search Products  
+🛒 Cart Management  
+📦 Place Orders  
+💳 Online Payments (Stripe)  
+📜 Order History  
+
+---
+
+## 🛠 Admin Features
+
+🔐 Admin Login  
+➕ Add Products  
+📤 Upload Images (Cloudinary)  
+📋 View Products  
+📦 Manage Orders  
+
+---
+
+# 🛡 Security Features (NEW)
+
+This project implements multiple production-grade security practices:
+
+### 🔐 Authentication & Password Security
+- Password hashing using **bcrypt**
+- JWT-based authentication
+- Admin credential protection via environment variables
+
+---
+
+### 🧪 Input Validation & Sanitization
+- Request validation using **express-validator**
+- Email format enforcement
+- Strong password policy
+- Input sanitization to prevent malicious data
+- XSS prevention using `.escape()`
+
+---
+
+### 🧨 NoSQL Injection Protection
+- Global sanitization using **express-mongo-sanitize**
+- Removes dangerous MongoDB operators (`$ne`, `$gt`, etc.)
+- Protects against authentication bypass attacks
+
+---
+
+### 🌐 Secure CORS Configuration
+- Domain whitelist (no wildcard `*`)
+- Only trusted frontend/admin domains can access API
+- Blocks unauthorized cross-origin requests
+
+---
+
+### 🔑 Secure Environment Variable Handling
+- Secrets stored in `.env` (never committed)
+- Validated using **envalid**
+- Application fails fast if critical variables are missing
+- `.env.example` provided for safe configuration
+
+---
+
+### 🧱 Additional Security Practices
+- Sensitive keys kept server-side only
+- Frontend exposes only public variables (`VITE_` prefix)
+- Production-ready configuration structure
 
 ---
 
@@ -67,61 +127,41 @@ It includes:
 ShopSphere/
 │
 ├── admin/        → Admin dashboard
-├── backend/      → Express API server
-├── frontend/     → User e-commerce frontend
+├── backend/      → Secure Express API
+├── frontend/     → User storefront
 ├── .gitignore
 └── README.md
 ```
 
 ---
 
-# ✨ Features
+# ⚙️ Environment Setup
 
-## 👤 User Features
+## Backend `.env`
 
-🔐 User Registration & Login (JWT Auth)  
-🛍 Browse Products  
-🔍 Search & Filter Products  
-🛒 Add to Cart  
-➕ Update Cart Quantity  
-📦 Place Orders  
-💳 Secure Online Payments (Stripe)  
-📜 Order History  
-
----
-
-## 🛠 Admin Features
-
-🔐 Admin Authentication  
-➕ Add New Products  
-📤 Upload Product Images (Cloudinary)  
-📋 View All Products  
-📦 Manage Orders  
-
----
-
-# ⚙️ Environment Variables
-
-Create a `.env` file inside the `backend` folder:
+Create inside `backend/`:
 
 ```env
+PORT=4000
 MONGODB_URI=
+JWT_SECRET=
+STRIPE_SECRET_KEY=
 CLOUDINARY_NAME=
 CLOUDINARY_API_KEY=
 CLOUDINARY_SECRET_KEY=
-JWT_SECRET=
 ADMIN_EMAIL=
 ADMIN_PASSWORD=
-STRIPE_SECRET_KEY=
 ```
 
-Create a `.env` file inside `frontend` and `admin`:
+---
+
+## Frontend `.env`
+
+Create inside `frontend/`:
 
 ```env
-VITE_BACKEND_URL=
+VITE_BACKEND_URL=http://localhost:4000
 ```
-
-> ⚠️ Never commit `.env` files to GitHub.
 
 ---
 
@@ -144,11 +184,6 @@ npm install
 npm start
 ```
 
-Backend runs at:
-```
-http://localhost:4000
-```
-
 ---
 
 ## 3️⃣ Frontend Setup
@@ -157,11 +192,6 @@ http://localhost:4000
 cd frontend
 npm install
 npm run dev
-```
-
-Frontend runs at:
-```
-http://localhost:5173
 ```
 
 ---
@@ -174,35 +204,21 @@ npm install
 npm run dev
 ```
 
-Admin runs at:
-```
-http://localhost:5174
-```
-
 ---
 
-# 🔐 Security Practices
+# 🚀 Future Improvements
 
-✔ Password hashing using bcrypt  
-✔ JWT-based authentication  
-✔ Environment variables for secrets  
-✔ Secure payment integration  
-
----
-
-# 🚀 Future Enhancements
-
-✨ Product Reviews & Ratings  
-✨ Wishlist Feature  
+✨ Product Reviews  
+✨ Wishlist  
 ✨ Order Tracking  
 ✨ Role-Based Access Control  
-✨ Pagination & Performance Optimization  
+✨ Performance Optimization  
 
 ---
 
 # 👨‍💻 Author
 
-### 💙 Aditya Kanwar
+### 💙 Aditya Kanwar  
 GitHub: https://github.com/AdityaKanwar22  
 
 ---
@@ -210,4 +226,3 @@ GitHub: https://github.com/AdityaKanwar22
 <p align="center">
   ⭐ If you like this project, consider giving it a star!
 </p>
-
