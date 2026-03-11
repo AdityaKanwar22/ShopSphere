@@ -4,6 +4,7 @@ import express from "express";
 import {
     adminLogin,
     loginUser,
+    getUserProfile,
     registerUser,
 } from "../controllers/userController.js";
 
@@ -15,6 +16,7 @@ import {
 
 // 🔐 Rate limiter → protects login routes from brute-force attacks
 import { loginLimiter } from "../middlewares/rateLimiter.js";
+import authUser from "../middlewares/auth.js";
 
 const userRouter = express.Router();
 
@@ -91,6 +93,11 @@ userRouter.post(
     loginLimiter, // 🚨 Prevent brute-force admin login attacks
     adminLogin    // Controller handles admin authentication
 );
+
+// =======================================================
+// 👤 PROFILE (AUTH REQUIRED)
+// =======================================================
+userRouter.get("/profile", authUser, getUserProfile);
 
 
 // Export router so server.js can use it

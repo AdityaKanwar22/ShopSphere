@@ -9,6 +9,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Frontend-React-blue?style=for-the-badge&logo=react" />
+  <img src="https://img.shields.io/badge/Admin-React-orange?style=for-the-badge&logo=react" />
   <img src="https://img.shields.io/badge/Backend-Node.js-green?style=for-the-badge&logo=node.js" />
   <img src="https://img.shields.io/badge/Database-MongoDB-darkgreen?style=for-the-badge&logo=mongodb" />
   <img src="https://img.shields.io/badge/Security-Production--Ready-red?style=for-the-badge" />
@@ -16,30 +17,44 @@
 
 ---
 
-## 🌟 About The Project
+# 🌟 About The Project
 
-**ShopSphere** is a secure full-stack e-commerce application built using the MERN stack.  
-It provides a complete online shopping experience along with an admin dashboard for product and order management.
+**ShopSphere** is a **secure full-stack e-commerce platform** built using the **MERN Stack (MongoDB, Express, React, Node.js)**.
 
-The project emphasizes **security, scalability, and clean architecture**, making it production-ready.
+It provides a **complete online shopping experience** along with a **dedicated admin dashboard** for managing products, orders, and store operations.
+
+The project focuses on:
+
+- 🔐 Security Best Practices  
+- ⚡ Scalable Backend Architecture  
+- 🧱 Clean Code Structure  
+- 🛡 Production-Level Protection  
 
 ---
 
 # 🧱 Tech Stack
 
-## 🎨 Frontend
+## 🎨 Frontend (User Store)
+
 - ⚛️ React (Vite)
 - 🔀 React Router DOM
 - 🎨 Tailwind CSS
 - 📡 Axios
 - 🔔 React Toastify
 
+---
+
 ## 🛠 Admin Panel
+
 - ⚛️ React (Vite)
 - 🎨 Tailwind CSS
 - 📡 Axios
+- 📦 Order Management Interface
+
+---
 
 ## ⚙️ Backend
+
 - 🟢 Node.js
 - 🚂 Express.js
 - 🍃 MongoDB (Mongoose)
@@ -49,16 +64,20 @@ The project emphasizes **security, scalability, and clean architecture**, making
 
 ---
 
-# ✨ Features
+# ✨ Core Features
 
 ## 👤 User Features
 
-🔐 Secure User Authentication (JWT)  
-🛍 Browse & Search Products  
-🛒 Cart Management  
+🔐 Secure User Authentication  
+🛍 Browse Products  
+🔎 Product Search & Filtering  
+🛒 Add Products to Cart  
 📦 Place Orders  
 💳 Online Payments (Stripe)  
 📜 Order History  
+📍 Order Tracking  
+👤 User Profile Page  
+📋 My Orders accessible from navbar dropdown  
 
 ---
 
@@ -66,58 +85,258 @@ The project emphasizes **security, scalability, and clean architecture**, making
 
 🔐 Admin Login  
 ➕ Add Products  
-📤 Upload Images (Cloudinary)  
+📤 Upload Product Images (Cloudinary)  
 📋 View Products  
 📦 Manage Orders  
+🔄 Update Order Status (Processing / Shipped / Delivered)
 
 ---
 
-# 🛡 Security Features (NEW)
+# 🧭 User Navigation System
 
-This project implements multiple production-grade security practices:
+Users can access important features from the **profile dropdown menu in the navbar**.
 
-### 🔐 Authentication & Password Security
+```
+Profile Icon
+   │
+   ├── Profile
+   ├── My Orders
+   └── Logout
+```
+
+---
+
+# 📦 Order Tracking System
+
+Users can **track their order status** in real time.
+
+Example order lifecycle:
+
+```
+Order Placed
+     ↓
+Processing
+     ↓
+Shipped
+     ↓
+Delivered
+```
+
+Admin updates order status →  
+User can see updated status in **My Orders page**.
+
+---
+
+# 🛡 Security Features
+
+This project implements **multiple production-grade security layers**.
+
+---
+
+## 🔐 Authentication & Password Security
+
 - Password hashing using **bcrypt**
-- JWT-based authentication
-- Admin credential protection via environment variables
+- Secure **JWT authentication**
+- Protected admin login
+- Environment-based secrets
 
 ---
 
-### 🧪 Input Validation & Sanitization
-- Request validation using **express-validator**
-- Email format enforcement
+## 🧪 Input Validation & Sanitization
+
+Libraries used:
+
+```
+express-validator
+express-mongo-sanitize
+```
+
+Protection includes:
+
+- Email validation
 - Strong password policy
-- Input sanitization to prevent malicious data
-- XSS prevention using `.escape()`
+- Input sanitization
+- XSS prevention
+- NoSQL injection protection
+
+Example blocked attack:
+
+```
+{ "email": { "$gt": "" } }
+```
 
 ---
 
-### 🧨 NoSQL Injection Protection
-- Global sanitization using **express-mongo-sanitize**
-- Removes dangerous MongoDB operators (`$ne`, `$gt`, etc.)
-- Protects against authentication bypass attacks
+## 🌐 Secure CORS Configuration
+
+API access restricted to trusted domains.
+
+Example:
+
+```
+http://localhost:5173
+http://localhost:5174
+```
+
+Prevents unauthorized API access.
 
 ---
 
-### 🌐 Secure CORS Configuration
-- Domain whitelist (no wildcard `*`)
-- Only trusted frontend/admin domains can access API
-- Blocks unauthorized cross-origin requests
+## 🛑 Rate Limiting Protection
+
+Implemented using:
+
+```
+express-rate-limit
+```
+
+Protection against:
+
+- Brute-force attacks
+- API abuse
+- DDoS attempts
+
+Example limits:
+
+```
+100 requests / 15 minutes
+5 login attempts / 15 minutes
+```
 
 ---
 
-### 🔑 Secure Environment Variable Handling
-- Secrets stored in `.env` (never committed)
-- Validated using **envalid**
-- Application fails fast if critical variables are missing
-- `.env.example` provided for safe configuration
+## 🪖 HTTP Security Headers
+
+Implemented using:
+
+```
+helmet
+```
+
+Protection includes:
+
+- Clickjacking prevention
+- MIME sniffing protection
+- Content injection protection
+- Secure headers configuration
+
+Example headers:
+
+```
+Content-Security-Policy
+X-Frame-Options
+Strict-Transport-Security
+X-Content-Type-Options
+```
 
 ---
 
-### 🧱 Additional Security Practices
-- Sensitive keys kept server-side only
-- Frontend exposes only public variables (`VITE_` prefix)
-- Production-ready configuration structure
+## 🍪 Secure Cookie Authentication
+
+Tokens stored using **HttpOnly cookies**.
+
+Benefits:
+
+- Prevents XSS token theft
+- SameSite protection
+- Secure cookies in production
+
+---
+
+## 🔐 CSRF Protection
+
+Implemented using:
+
+```
+csurf
+```
+
+Workflow:
+
+```
+Frontend requests CSRF token
+↓
+Backend sends token
+↓
+Frontend sends token with protected requests
+```
+
+---
+
+## 🍃 MongoDB Database Hardening
+
+Security improvements include:
+
+- Schema validation
+- Enum constraints
+- Sanitized queries
+- Password excluded from responses
+
+Example:
+
+```
+password field is never returned in API responses
+```
+
+---
+
+## 📊 Logging & Monitoring
+
+Logging implemented using:
+
+```
+morgan
+winston
+```
+
+Features:
+
+- HTTP request logging
+- Error logging
+- Production monitoring
+
+---
+
+## ⚠️ Secure Error Handling
+
+Custom error middleware prevents leaking sensitive information.
+
+Example response:
+
+```
+{
+  "success": false,
+  "message": "Internal Server Error"
+}
+```
+
+Stack traces are hidden in **production**.
+
+---
+
+# 🧭 System Architecture
+
+```
+                ┌───────────────┐
+                │   Frontend    │
+                │   React App   │
+                └───────┬───────┘
+                        │
+                        │ REST API
+                        ▼
+                ┌───────────────┐
+                │   Backend     │
+                │ Express Server│
+                └───────┬───────┘
+                        │
+                        ▼
+                ┌───────────────┐
+                │   MongoDB     │
+                │   Database    │
+                └───────────────┘
+```
+
+Admin panel communicates with the **same backend API**.
 
 ---
 
@@ -127,8 +346,21 @@ This project implements multiple production-grade security practices:
 ShopSphere/
 │
 ├── admin/        → Admin dashboard
-├── backend/      → Secure Express API
-├── frontend/     → User storefront
+│
+├── backend/
+│   ├── config/
+│   ├── controllers/
+│   ├── middlewares/
+│   ├── models/
+│   ├── routes/
+│   └── server.js
+│
+├── frontend/
+│   ├── components/
+│   ├── context/
+│   ├── pages/
+│   └── assets/
+│
 ├── .gitignore
 └── README.md
 ```
@@ -139,9 +371,9 @@ ShopSphere/
 
 ## Backend `.env`
 
-Create inside `backend/`:
+Create inside `backend/`
 
-```env
+```
 PORT=4000
 MONGODB_URI=
 JWT_SECRET=
@@ -157,9 +389,9 @@ ADMIN_PASSWORD=
 
 ## Frontend `.env`
 
-Create inside `frontend/`:
+Create inside `frontend/`
 
-```env
+```
 VITE_BACKEND_URL=http://localhost:4000
 ```
 
@@ -169,7 +401,7 @@ VITE_BACKEND_URL=http://localhost:4000
 
 ## 1️⃣ Clone Repository
 
-```bash
+```
 git clone https://github.com/AdityaKanwar22/ShopSphere.git
 cd ShopSphere
 ```
@@ -178,7 +410,7 @@ cd ShopSphere
 
 ## 2️⃣ Backend Setup
 
-```bash
+```
 cd backend
 npm install
 npm start
@@ -188,7 +420,7 @@ npm start
 
 ## 3️⃣ Frontend Setup
 
-```bash
+```
 cd frontend
 npm install
 npm run dev
@@ -198,7 +430,7 @@ npm run dev
 
 ## 4️⃣ Admin Setup
 
-```bash
+```
 cd admin
 npm install
 npm run dev
@@ -209,20 +441,23 @@ npm run dev
 # 🚀 Future Improvements
 
 ✨ Product Reviews  
-✨ Wishlist  
-✨ Order Tracking  
+✨ Wishlist System  
+✨ Email Notifications  
 ✨ Role-Based Access Control  
+✨ Admin Analytics Dashboard  
 ✨ Performance Optimization  
 
 ---
 
 # 👨‍💻 Author
 
-### 💙 Aditya Kanwar  
-GitHub: https://github.com/AdityaKanwar22  
+### 💙 Aditya Kanwar
+
+GitHub:  
+https://github.com/AdityaKanwar22
 
 ---
 
 <p align="center">
-  ⭐ If you like this project, consider giving it a star!
+⭐ If you like this project, consider giving it a star!
 </p>

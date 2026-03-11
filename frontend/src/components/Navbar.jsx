@@ -1,25 +1,29 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { assets } from "../assets/assets";
 import { Link, NavLink } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
     const [visible, setVisible] = useState(false);
+    const [menuOpen, setMenuOpen] = useState(false);
+    const menuRef = useRef(null);
     const {
         setShowSearch,
         getCartCount,
         navigate,
-        token,
-        setToken,
         setCartItems,
+        isAuthenticated,
+        logout,
     } = useContext(ShopContext);
 
-    const logout = () => {
-        localStorage.removeItem("token");
-        setToken("");
-        setCartItems({});
-        navigate("/login");
-    };
+    useEffect(() => {
+        const onDocClick = (e) => {
+            if (!menuRef.current) return;
+            if (!menuRef.current.contains(e.target)) setMenuOpen(false);
+        };
+        document.addEventListener("mousedown", onDocClick);
+        return () => document.removeEventListener("mousedown", onDocClick);
+    }, []);
 
     return (
         <div className="flex items-center justify-between py-5 font-medium">
@@ -59,27 +63,43 @@ const Navbar = () => {
                     src={assets.search_icon}
                     className="w-5 cursor-pointer"
                 />
-                <div className="group relative">
+                <div className="relative" ref={menuRef}>
                     <img
-                        onClick={() => (token ? null : navigate("/login"))}
+                        onClick={() => {
+                            if (!isAuthenticated) return navigate("/login");
+                            setMenuOpen((v) => !v);
+                        }}
                         className="w-5 cursor-pointer"
                         src={assets.profile_icon}
                     />
                     {/* Dropdown menu */}
-                    {token && (
-                        <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-                            <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-                                <p className="cursor-pointer hover:text-black">
-                                    My Profile
-                                </p>
+                    {isAuthenticated && menuOpen && (
+                        <div className="absolute right-0 pt-4 z-50">
+                            <div className="flex flex-col gap-2 w-40 py-3 px-5 bg-slate-100 text-gray-600 rounded shadow">
                                 <p
-                                    onClick={() => navigate("/orders")}
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        navigate("/profile");
+                                    }}
                                     className="cursor-pointer hover:text-black"
                                 >
-                                    Orders
+                                    Profile
                                 </p>
                                 <p
-                                    onClick={logout}
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        navigate("/orders");
+                                    }}
+                                    className="cursor-pointer hover:text-black"
+                                >
+                                    My Orders
+                                </p>
+                                <p
+                                    onClick={() => {
+                                        setMenuOpen(false);
+                                        logout();
+                                        setCartItems({});
+                                    }}
                                     className="cursor-pointer hover:text-black"
                                 >
                                     Logout

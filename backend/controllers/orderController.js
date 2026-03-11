@@ -2,6 +2,23 @@ import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from "stripe";
 
+const ORDER_STATUSES = [
+    "Order Placed",
+    "Processing",
+    "Packing",
+    "Shipped",
+    "Out For Delivery",
+    "Delivered",
+    "Cancelled",
+];
+
+const normalizeStatus = (status) => {
+    if (!status) return "Order Placed";
+    if (status === "Packing") return "Processing";
+    if (status === "Out For Delivery") return "Shipped";
+    return status;
+};
+
 // global variables
 const currency = "inr";
 const deliveryCharge = 100;
@@ -111,8 +128,12 @@ const placeOrderRazorpay = async (req, res) => {};
 // All Orders data for Admin Panel
 const allOrders = async (req, res) => {
     try {
-        const orders = await orderModel.find({});
-        res.json({ success: true, orders });
+        const orders = await orderModel.find({}).sort({ date: -1 }).lean();
+        const normalized = orders.map((o) => ({
+            ...o,
+            status: normalizeStatus(o.status),
+        }));
+        res.json({ success: true, orders: normalized });
     } catch (error) {
         console.log(error);
         res.json({ success: true, message: error.message });
@@ -123,8 +144,12 @@ const allOrders = async (req, res) => {
 const userOrders = async (req, res) => {
     try {
         const { userId } = req.body;
-        const orders = await orderModel.find({ userId });
-        res.json({ success: true, orders });
+        const orders = await orderModel.find({ userId }).sort({ date: -1 }).lean();
+        const normalized = orders.map((o) => ({
+            ...o,
+            status: normalizeStatus(o.status),
+        }));
+        res.json({ success: true, orders: normalized });
     } catch (error) {
         console.log(error);
         res.json({ success: true, message: error.message });
@@ -136,8 +161,30 @@ const updateStatus = async (req, res) => {
     try {
         const { orderId, status } = req.body;
 
-        await orderModel.findByIdAndUpdate(orderId, { status });
-        res.json({ success: true, message: "Status Updated" });
+        if (!ORDER_STATUSES.includes(status)) {
+            return res.json({
+                success: false,
+                message: `Invalid status. Allowed: ${ORDER_STATUSES.join(", ")}`,
+            });
+        }
+
+        const canonicalStatus = normalizeStatus(status);
+
+        const updatedOrder = await orderModel.findByIdAndUpdate(
+            orderId,
+            { status: canonicalStatus },
+            { new: true }
+        );
+
+        if (!updatedOrder) {
+            return res.json({ success: false, message: "Order not found" });
+        }
+
+        res.json({
+            success: true,
+            message: "Status Updated",
+            order: { ...updatedOrder.toObject(), status: canonicalStatus },
+        });
     } catch (error) {
         console.log(error);
         res.json({ success: true, message: error.message });

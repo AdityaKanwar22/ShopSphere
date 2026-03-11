@@ -199,5 +199,26 @@ const logoutUser = (req, res) => {
     });
 };
 
+// =======================================================
+// 👤 GET LOGGED-IN USER PROFILE
+// =======================================================
+const getUserProfile = async (req, res) => {
+    try {
+        const userId = req.userId || req.body?.userId;
+        if (!userId) {
+            return res.json({ success: false, message: "Not Authorized" });
+        }
 
-export { loginUser, registerUser, adminLogin, logoutUser };
+        const user = await userModel.findById(userId).select("-password");
+        if (!user) {
+            return res.json({ success: false, message: "User not found" });
+        }
+
+        res.json({ success: true, user });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export { loginUser, registerUser, adminLogin, logoutUser, getUserProfile };

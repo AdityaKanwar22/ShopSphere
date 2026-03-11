@@ -100,10 +100,10 @@ const Orders = () => {
               className="p-2 font-semibold"
             >
               <option value="Order Placed">Order Placed</option>
-              <option value="Packing">Packing</option>
+              <option value="Processing">Processing</option>
               <option value="Shipped">Shipped</option>
-              <option value="Out For Delivery">Out For Delivery</option>
               <option value="Delivered">Delivered</option>
+              <option value="Cancelled">Cancelled</option>
             </select>
           </div>
         ))}
