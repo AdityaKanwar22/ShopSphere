@@ -54,6 +54,23 @@ const userSchema = new mongoose.Schema(
             enum: ["user", "admin"], // Only these values allowed
             default: "user",
         },
+
+        // 🆔 HUMAN-READABLE USER ID (e.g. USER001, USER002)
+        userId: {
+            type: String,
+            unique: true,
+            sparse: true, // allows null/undefined for existing users before backfill
+        },
+
+        // 🔐 PASSWORD RESET (forgot password flow)
+        resetPasswordToken: { type: String },
+        resetPasswordExpire: { type: Date },
+
+        // ❤️ WISHLIST (product IDs)
+        wishlist: {
+            type: [String],
+            default: [],
+        },
     },
     {
         minimize: false,   // Keep empty objects (needed for cart)

@@ -6,17 +6,23 @@ import {
     loginUser,
     getUserProfile,
     registerUser,
+    forgotPassword,
+    resetPassword,
+    getAllUsers,
 } from "../controllers/userController.js";
 
 // Validation middleware → checks if input is valid before controller runs
 import {
     registerValidation,
     loginValidation,
+    forgotPasswordValidation,
+    resetPasswordValidation,
 } from "../middlewares/validation.js";
 
 // 🔐 Rate limiter → protects login routes from brute-force attacks
 import { loginLimiter } from "../middlewares/rateLimiter.js";
 import authUser from "../middlewares/auth.js";
+import adminAuth from "../middlewares/adminAuth.js";
 
 const userRouter = express.Router();
 
@@ -99,6 +105,20 @@ userRouter.post(
 // =======================================================
 userRouter.get("/profile", authUser, getUserProfile);
 
+// =======================================================
+// 📧 FORGOT PASSWORD (no auth)
+// =======================================================
+userRouter.post("/forgot-password", forgotPasswordValidation, forgotPassword);
+
+// =======================================================
+// 🔐 RESET PASSWORD (no auth, token in URL)
+// =======================================================
+userRouter.post("/reset-password/:token", resetPasswordValidation, resetPassword);
+
+// =======================================================
+// 👥 ADMIN: List users (admin only)
+// =======================================================
+userRouter.get("/admin/users", adminAuth, getAllUsers);
 
 // Export router so server.js can use it
 export default userRouter;

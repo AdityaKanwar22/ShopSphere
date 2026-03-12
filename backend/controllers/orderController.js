@@ -1,6 +1,7 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from "stripe";
+import { sendOrderShippedEmail, sendOrderDeliveredEmail } from "../utils/emailService.js";
 
 const ORDER_STATUSES = [
     "Order Placed",
@@ -15,7 +16,6 @@ const ORDER_STATUSES = [
 const normalizeStatus = (status) => {
     if (!status) return "Order Placed";
     if (status === "Packing") return "Processing";
-    if (status === "Out For Delivery") return "Shipped";
     return status;
 };
 
@@ -125,13 +125,18 @@ const verifyStripe = async (req, res) => {
 // Placing orders using Razorpay Method
 const placeOrderRazorpay = async (req, res) => {};
 
-// All Orders data for Admin Panel
+// All Orders data for Admin Panel (with human-readable user ID for display)
 const allOrders = async (req, res) => {
     try {
         const orders = await orderModel.find({}).sort({ date: -1 }).lean();
+        const userIds = [...new Set(orders.map((o) => o.userId).filter(Boolean))];
+        const users = await userModel.find({ _id: { $in: userIds } }).select("_id userId").lean();
+        const userMap = Object.fromEntries(users.map((u) => [u._id.toString(), u.userId || u._id.toString()]));
+
         const normalized = orders.map((o) => ({
             ...o,
             status: normalizeStatus(o.status),
+            userDisplayId: userMap[o.userId] || o.userId,
         }));
         res.json({ success: true, orders: normalized });
     } catch (error) {
@@ -156,7 +161,7 @@ const userOrders = async (req, res) => {
     }
 };
 
-// Update order status from Admin Panel
+// Update order status from Admin Panel; send email when Shipped or Delivered
 const updateStatus = async (req, res) => {
     try {
         const { orderId, status } = req.body;
@@ -172,18 +177,30 @@ const updateStatus = async (req, res) => {
 
         const updatedOrder = await orderModel.findByIdAndUpdate(
             orderId,
-            { status: canonicalStatus },
+            { status: canonicalStatus, updatedAt: new Date() },
             { new: true }
-        );
+        ).lean();
 
         if (!updatedOrder) {
             return res.json({ success: false, message: "Order not found" });
         }
 
+        if (canonicalStatus === "Shipped" || canonicalStatus === "Delivered") {
+            const user = await userModel.findById(updatedOrder.userId).select("email name").lean();
+            if (user?.email) {
+                const orderShortId = updatedOrder._id.toString().slice(-6).toUpperCase();
+                if (canonicalStatus === "Shipped") {
+                    await sendOrderShippedEmail(user.email, orderShortId, user.name);
+                } else {
+                    await sendOrderDeliveredEmail(user.email, orderShortId, user.name);
+                }
+            }
+        }
+
         res.json({
             success: true,
             message: "Status Updated",
-            order: { ...updatedOrder.toObject(), status: canonicalStatus },
+            order: { ...updatedOrder, status: canonicalStatus },
         });
     } catch (error) {
         console.log(error);

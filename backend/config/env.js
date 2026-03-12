@@ -23,6 +23,14 @@ const env = cleanEnv(process.env, {
 
     ADMIN_EMAIL: email(),
     ADMIN_PASSWORD: str(),
+
+    // Email (nodemailer SMTP) — used for password reset, newsletter, order notifications
+    FRONTEND_URL: str({ default: "http://localhost:5173" }),
+    EMAIL_HOST: str({ default: "" }),
+    EMAIL_PORT: str({ default: "587" }),
+    EMAIL_USER: str({ default: "" }),
+    EMAIL_PASS: str({ default: "" }),
+    MAIL_FROM: str({ default: "" }),
 });
 
 export default env;

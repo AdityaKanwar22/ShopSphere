@@ -14,6 +14,9 @@ import userRouter from "./routes/userRoute.js";
 import productRouter from "./routes/productRoute.js";
 import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
+import subscribeRouter from "./routes/subscribeRoute.js";
+import wishlistRouter from "./routes/wishlistRoute.js";
+import reviewRouter from "./routes/reviewRoute.js";
 
 import { sanitizeData } from "./middlewares/validation.js";
 import { globalLimiter } from "./middlewares/rateLimiter.js";
@@ -131,6 +134,9 @@ app.use("/api/user", userRouter);
 app.use("/api/product", productRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/order", orderRouter);
+app.use("/api/subscribe", subscribeRouter);
+app.use("/api/wishlist", wishlistRouter);
+app.use("/api/review", reviewRouter);
 
 
 // Simple test route

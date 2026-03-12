@@ -24,6 +24,12 @@ const orderSchema = new mongoose.Schema({
     paymentMethod: { type: String, required: true },
     payment: { type: Boolean, required: true, default: false },
     date: { type: Number, required: true },
+    updatedAt: { type: Date, default: Date.now },
+}, { timestamps: false });
+
+orderSchema.pre("save", function (next) {
+    this.updatedAt = new Date();
+    next();
 });
 
 const orderModel =

@@ -44,3 +44,32 @@ export const loginValidation = [
         next();
     }
 ];
+
+export const forgotPasswordValidation = [
+    body('email')
+        .isEmail().withMessage('Please enter a valid email')
+        .normalizeEmail(),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.json({ success: false, message: errors.array()[0].msg });
+        }
+        next();
+    }
+];
+
+export const resetPasswordValidation = [
+    body('password')
+        .isLength({ min: 8 }).withMessage('Password must be at least 8 characters')
+        .matches(/\d/).withMessage('Password must contain a number')
+        .matches(/[A-Z]/).withMessage('Password must contain an uppercase letter'),
+
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.json({ success: false, message: errors.array()[0].msg });
+        }
+        next();
+    }
+];

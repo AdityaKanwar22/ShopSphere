@@ -10,6 +10,8 @@ const productSchema = new mongoose.Schema({
     sizes: { type: Array, required: true },
     bestseller: { type: Boolean },
     date: { type: Number, required: true },
+    averageRating: { type: Number, default: 0 },
+    totalReviews: { type: Number, default: 0 },
 });
 
 const productModel =
