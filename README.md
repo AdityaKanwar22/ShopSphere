@@ -135,7 +135,7 @@ This project implements **multiple production-grade security layers**.
 
 ## 🔐 Authentication & Password Security
 
-- Password hashing using **bcrypt**
+- Password hashing using **Argon2** (with temporary backward-compatible support for legacy **bcrypt** hashes)
 - Secure **JWT authentication**
 - Protected admin login
 - Environment-based secrets

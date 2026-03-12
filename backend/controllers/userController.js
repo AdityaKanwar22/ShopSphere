@@ -1,4 +1,5 @@
 import validator from "validator";
+import argon2 from "argon2";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
@@ -9,7 +10,9 @@ import userModel from "../models/userModel.js";
 // =======================================================
 
 const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET);
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: "1d", // Token valid for 1 day
+    });
 };
 
 
@@ -32,7 +35,42 @@ const loginUser = async (req, res) => {
         }
 
         // 🔑 Compare entered password with hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
+        let isMatch = false;
+
+        try {
+            const storedHash = user.password || "";
+
+            // Temporary backwards compatibility:
+            // - If hash starts with bcrypt prefix ($2...), verify with bcryptjs
+            // - Otherwise, assume Argon2 and verify with argon2
+            if (
+                storedHash.startsWith("$2a$") ||
+                storedHash.startsWith("$2b$") ||
+                storedHash.startsWith("$2y$") ||
+                storedHash.startsWith("$2$") ||
+                storedHash.startsWith("$2x$")
+            ) {
+                isMatch = await bcrypt.compare(password, storedHash);
+
+                // On successful login with legacy bcrypt hash, upgrade to Argon2
+                if (isMatch) {
+                    try {
+                        const newHash = await argon2.hash(password);
+                        user.password = newHash;
+                        await user.save();
+                    } catch (upgradeError) {
+                        console.log("Error upgrading password hash to Argon2:", upgradeError.message);
+                    }
+                }
+            } else {
+                isMatch = await argon2.verify(storedHash, password, {
+                    type: argon2.argon2id,
+                });
+            }
+        } catch (hashError) {
+            console.log("Error verifying password:", hashError.message);
+            isMatch = false;
+        }
 
         if (!isMatch) {
             return res.json({
@@ -101,9 +139,13 @@ const registerUser = async (req, res) => {
             });
         }
 
-        // 🔐 Hash password before saving
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+        // 🔐 Hash password before saving using Argon2id with strong parameters
+        const hashedPassword = await argon2.hash(password, {
+            type: argon2.argon2id,
+            memoryCost: 2 ** 16,
+            timeCost: 3,
+            parallelism: 1,
+        });
 
         // 👤 Create new user
         const newUser = new userModel({
