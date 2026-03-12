@@ -5,6 +5,8 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import Add from "./pages/Add";
 import List from "./pages/List";
 import Orders from "./pages/Orders";
+import Users from "./pages/Users";
+import Reviews from "./pages/Reviews";
 import Login from "./components/Login";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -44,6 +46,8 @@ const App = () => {
                 <Route path="/add" element={<Add />} />
                 <Route path="/list" element={<List />} />
                 <Route path="/orders" element={<Orders />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="/reviews" element={<Reviews />} />
               </Routes>
             </div>
           </div>

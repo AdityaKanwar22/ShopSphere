@@ -52,6 +52,9 @@ const Orders = () => {
           >
             <img className="w-12" src={assets.parcel_icon} alt="" />
             <div>
+              {order.userDisplayId && (
+                <p className="text-xs text-gray-500 mb-1">User: {order.userDisplayId}</p>
+              )}
               <div>
                 {order.items.map((item, idx) => {
                   const isLast = idx === order.items.length - 1;
@@ -102,6 +105,7 @@ const Orders = () => {
               <option value="Order Placed">Order Placed</option>
               <option value="Processing">Processing</option>
               <option value="Shipped">Shipped</option>
+              <option value="Out For Delivery">Out For Delivery</option>
               <option value="Delivered">Delivered</option>
               <option value="Cancelled">Cancelled</option>
             </select>
