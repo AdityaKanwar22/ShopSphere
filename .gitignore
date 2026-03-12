@@ -12,6 +12,7 @@ backend/.env
 frontend/.env
 admin/.env
 
+
 ####################################
 # Build Output
 ####################################
@@ -43,3 +44,6 @@ Thumbs.db
 # Coverage
 ####################################
 coverage/
+
+
+TESTING_INSTRUCTIONS.md
