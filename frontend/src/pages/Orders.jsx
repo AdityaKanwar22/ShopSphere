@@ -3,7 +3,7 @@ import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import apiClient from "../api/client";
 
-const ORDER_STEPS = ["Order Placed", "Processing", "Shipped", "Delivered"];
+const ORDER_STEPS = ["Order Placed", "Processing", "Shipped", "Out For Delivery", "Delivered"];
 
 const getStepIndex = (status) => {
   if (status === "Cancelled") return -1;
@@ -26,7 +26,7 @@ const OrderTracker = ({ status }) => {
   }
 
   return (
-    <div className="mt-2 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs sm:text-sm">
+    <div className="mt-2 grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs sm:text-sm">
       {ORDER_STEPS.map((step, idx) => {
         const done = idx <= currentIdx;
         return (

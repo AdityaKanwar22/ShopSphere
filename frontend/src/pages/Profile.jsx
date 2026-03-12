@@ -52,7 +52,7 @@ const Profile = () => {
               </p>
               <p>
                 <span className="text-gray-500">User ID:</span>{" "}
-                <span className="font-medium">{user._id}</span>
+                <span className="font-medium">{user.userId || user._id}</span>
               </p>
               <p>
                 <span className="text-gray-500">Member Since:</span>{" "}

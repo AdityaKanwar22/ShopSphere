@@ -97,6 +97,15 @@ const Navbar = () => {
                                 <p
                                     onClick={() => {
                                         setMenuOpen(false);
+                                        navigate("/wishlist");
+                                    }}
+                                    className="cursor-pointer hover:text-black"
+                                >
+                                    Wishlist
+                                </p>
+                                <p
+                                    onClick={() => {
+                                        setMenuOpen(false);
                                         logout();
                                         setCartItems({});
                                     }}
@@ -165,6 +174,15 @@ const Navbar = () => {
                     >
                         CONTACT
                     </NavLink>
+                    {isAuthenticated && (
+                        <NavLink
+                            onClick={() => setVisible(false)}
+                            className="py-2 pl-6 border"
+                            to="/wishlist"
+                        >
+                            WISHLIST
+                        </NavLink>
+                    )}
                 </div>
             </div>
         </div>

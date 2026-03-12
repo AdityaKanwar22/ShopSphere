@@ -14,6 +14,7 @@ const ShopContextProvider = (props) => {
   const [products, setProducts] = useState([]);
   const [showSearch, setShowSearch] = useState(false);
   const [cartItems, setCartItems] = useState({});
+  const [wishlistIds, setWishlistIds] = useState(new Set());
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [initializing, setInitializing] = useState(true);
   const [authLoading, setAuthLoading] = useState(false);
@@ -97,6 +98,58 @@ const ShopContextProvider = (props) => {
     return totalAmount;
   };
 
+  // ============ WISHLIST ============
+
+  const getWishlist = async () => {
+    try {
+      const res = await apiClient.get("/api/wishlist");
+      if (res.data?.success && Array.isArray(res.data.products)) {
+        setWishlistIds(new Set(res.data.products.map((p) => p._id)));
+      }
+    } catch {
+      setWishlistIds(new Set());
+    }
+  };
+
+  const addToWishlist = async (productId) => {
+    try {
+      await apiClient.post("/api/wishlist/add", { productId });
+      setWishlistIds((prev) => new Set([...prev, productId]));
+      toast.success("Added to wishlist");
+    } catch {
+      // interceptor toasts
+    }
+  };
+
+  const removeFromWishlist = async (productId) => {
+    try {
+      await apiClient.post("/api/wishlist/remove", { productId });
+      setWishlistIds((prev) => {
+        const next = new Set(prev);
+        next.delete(productId);
+        return next;
+      });
+      toast.success("Removed from wishlist");
+    } catch {
+      // interceptor toasts
+    }
+  };
+
+  const isInWishlist = (productId) => wishlistIds.has(productId);
+
+  const toggleWishlist = async (productId) => {
+    if (!isAuthenticated) {
+      toast.error("Please log in to use wishlist");
+      navigate("/login");
+      return;
+    }
+    if (wishlistIds.has(productId)) {
+      await removeFromWishlist(productId);
+    } else {
+      await addToWishlist(productId);
+    }
+  };
+
   // ==================== DATA FETCHING (products, cart) ====================
 
   const getProductsData = async () => {
@@ -136,6 +189,17 @@ const ShopContextProvider = (props) => {
     }
   };
 
+  const fetchWishlistAfterAuth = async () => {
+    try {
+      const res = await apiClient.get("/api/wishlist");
+      if (res.data?.success && Array.isArray(res.data.products)) {
+        setWishlistIds(new Set(res.data.products.map((p) => p._id)));
+      }
+    } catch {
+      setWishlistIds(new Set());
+    }
+  };
+
   // ==================== AUTH ACTIONS ====================
 
   const login = async (email, password) => {
@@ -147,7 +211,7 @@ const ShopContextProvider = (props) => {
       });
       if (res.data.success) {
         setIsAuthenticated(true);
-        await getUserCart();
+        await Promise.all([getUserCart(), fetchWishlistAfterAuth()]);
         toast.success("Logged in successfully");
         navigate("/");
       } else {
@@ -168,7 +232,7 @@ const ShopContextProvider = (props) => {
       });
       if (res.data.success) {
         setIsAuthenticated(true);
-        await getUserCart();
+        await Promise.all([getUserCart(), fetchWishlistAfterAuth()]);
         toast.success("Account created");
         navigate("/");
       } else {
@@ -199,7 +263,7 @@ const ShopContextProvider = (props) => {
         const { data } = await apiClient.get("/api/csrf-token");
         setCsrfToken(data.csrfToken);
 
-        await Promise.all([getProductsData(), getUserCart()]);
+        await Promise.all([getProductsData(), getUserCart(), getWishlist()]);
       } catch {
         // already handled
       } finally {
@@ -223,6 +287,12 @@ const ShopContextProvider = (props) => {
     getCartCount,
     updateQuantity,
     getCartAmount,
+    wishlistIds,
+    addToWishlist,
+    removeFromWishlist,
+    isInWishlist,
+    toggleWishlist,
+    getWishlist,
     navigate,
     backendUrl,
     isAuthenticated,

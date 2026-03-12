@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import apiClient from "../api/client";
 
 const NewsLetterBox = () => {
-    const onSubmitHandler = (event) => {
+    const [email, setEmail] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const onSubmitHandler = async (event) => {
         event.preventDefault();
+        if (!email.trim()) return;
+        setLoading(true);
+        try {
+            const res = await apiClient.post("/api/subscribe", { email: email.trim() });
+            if (res.data.success) {
+                toast.success(res.data.message);
+                setEmail("");
+            } else {
+                toast.error(res.data.message || "Subscription failed.");
+            }
+        } catch {
+            // interceptor handles toast
+        } finally {
+            setLoading(false);
+        }
     };
+
     return (
         <div className="text-center">
             <p className="text-2xl font-medium text-gray-800">
@@ -21,13 +42,17 @@ const NewsLetterBox = () => {
                     className="w-full sm:flex-1 outline-none"
                     type="email"
                     placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
+                    disabled={loading}
                 />
                 <button
                     type="submit"
-                    className="bg-black text-white text-xs px-10 py-4"
+                    disabled={loading}
+                    className="bg-black text-white text-xs px-10 py-4 disabled:opacity-60"
                 >
-                    SUBSCRIBE
+                    {loading ? "..." : "SUBSCRIBE"}
                 </button>
             </form>
         </div>

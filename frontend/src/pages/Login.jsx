@@ -1,5 +1,6 @@
 // frontend/src/pages/Login.jsx
 import React, { useContext, useState } from "react";
+import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 
 const Login = () => {
@@ -56,7 +57,7 @@ const Login = () => {
         required
       />
       <div className="w-full flex justify-between text-sm mt-[-8px]">
-        <p className="cursor-pointer">Forgot Password?</p>
+        <Link to="/forgot-password" className="cursor-pointer underline">Forgot Password?</Link>
 
         {currentState === "Login" ? (
           <p
